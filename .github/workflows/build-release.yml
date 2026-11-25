@@ -16,10 +16,10 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install fixed Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
         with:
-          toolchain: nightly-2025-06-01
+          components: rust-src
 
       - name: Install Vulkan SDK
         run: |
