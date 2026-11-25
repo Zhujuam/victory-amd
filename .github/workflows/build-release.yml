@@ -16,11 +16,17 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust (use repo pinned toolchain)
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: $(cat rust-toolchain.toml | grep 'channel' | cut -d'"' -f2)
 
-      - name: Install Vulkan SDK
-        run: choco install vulkan-sdk --no-progress
+      - name: Download & Install Vulkan SDK
+        run: |
+          Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/1.3.268.0/windows/VulkanSDK-1.3.268.0-Installer.exe" -OutFile vulkan.exe
+          .\vulkan.exe /S
+          echo "VULKAN_SDK=C:\VulkanSDK\1.3.268.0" >> $env:GITHUB_ENV
+          echo "C:\VulkanSDK\1.3.268.0\Bin" >> $env:GITHUB_PATH
 
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
