@@ -1,0 +1,35 @@
+name: Build Windows Release
+on:
+  workflow_dispatch:
+  push:
+    branches: [ victory-amd ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Vulkan SDK
+        run: choco install vulkan-sdk --no-progress
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo xtask build --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: victory-amd-exe
+          path: target/release/victory.exe
