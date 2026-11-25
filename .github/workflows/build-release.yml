@@ -16,12 +16,12 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Install Rust (use repo pinned toolchain)
-        uses: dtolnay/rust-toolchain@master
+      - name: Install fixed Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: $(cat rust-toolchain.toml | grep 'channel' | cut -d'"' -f2)
+          toolchain: nightly-2025-06-01
 
-      - name: Download & Install Vulkan SDK
+      - name: Install Vulkan SDK
         run: |
           Invoke-WebRequest -Uri "https://sdk.lunarg.com/sdk/download/1.3.268.0/windows/VulkanSDK-1.3.268.0-Installer.exe" -OutFile vulkan.exe
           .\vulkan.exe /S
